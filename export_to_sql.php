@@ -43,18 +43,18 @@ try {
     }
     
     // İlleri ekle
-    $ilStmt = $db->prepare("INSERT IGNORE INTO iller (il_kodu, il_adi) VALUES (:il_kodu, :il_adi)");
+    $ilStmt = $db->prepare("INSERT IGNORE INTO iller (il_id, il_adi) VALUES (:il_id, :il_adi)");
     
     // İlçeleri ekle
-    $ilceStmt = $db->prepare("INSERT IGNORE INTO ilceler (ilce_kodu, il_kodu, ilce_adi) VALUES (:ilce_kodu, :il_kodu, :ilce_adi)");
+    $ilceStmt = $db->prepare("INSERT IGNORE INTO ilceler (ilce_id, il_id, ilce_adi) VALUES (:ilce_id, :il_id, :ilce_adi)");
     
     // Mahalleleri ekle
-    $mahalleStmt = $db->prepare("INSERT IGNORE INTO mahalleler (mahalle_kodu, ilce_kodu, mahalle_adi, posta_kodu) VALUES (:mahalle_kodu, :ilce_kodu, :mahalle_adi, :posta_kodu)");
+    $mahalleStmt = $db->prepare("INSERT IGNORE INTO mahalleler (mahalle_id, ilce_id, mahalle_adi, posta_kodu) VALUES (:mahalle_id, :ilce_id, :mahalle_adi, :posta_kodu)");
     
     foreach ($data as $ilKodu => $il) {
         // İl ekle
         $ilStmt->execute([
-            ':il_kodu' => $ilKodu,
+            ':il_id' => $ilKodu,
             ':il_adi' => $il['il_adi']
         ]);
         
@@ -70,8 +70,8 @@ try {
         foreach ($il['ilceler'] as $ilceKodu => $ilce) {
             // İlçe ekle
             $ilceStmt->execute([
-                ':ilce_kodu' => $ilceKodu,
-                ':il_kodu' => $ilKodu,
+                ':ilce_id' => $ilceKodu,
+                ':il_id' => $ilKodu,
                 ':ilce_adi' => $ilce['ilce_adi']
             ]);
             
@@ -87,8 +87,8 @@ try {
             foreach ($ilce['mahalleler'] as $mahalleKodu => $mahalle) {
                 // Mahalle ekle
                 $mahalleStmt->execute([
-                    ':mahalle_kodu' => $mahalleKodu,
-                    ':ilce_kodu' => $ilceKodu,
+                    ':mahalle_id' => $mahalleKodu,
+                    ':ilce_id' => $ilceKodu,
                     ':mahalle_adi' => $mahalle['mahalle_adi'],
                     ':posta_kodu' => $mahalle['posta_kodu']
                 ]);

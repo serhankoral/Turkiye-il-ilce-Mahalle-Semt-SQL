@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head><title>
+	Posta Kodu Öğrenme Ekranı
+</title><link href="Content/Site.css" rel="stylesheet" type="text/css" /><link href="Content/themes/metroblue/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <!-- jTable style file -->
+    <link href="Scripts/jtable/themes/lightcolor/blue/jtable.css" rel="stylesheet" type="text/css" />
+    <script src="Scripts/modernizr-2.6.2.js" type="text/javascript"></script>
+    <script src="Scripts/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery-ui-1.9.2.min.js" type="text/javascript"></script>
+    <script src="Scripts/jtablesite.js" type="text/javascript"></script>
+    <!-- A helper library for JSON serialization -->
+    <script type="text/javascript" src="Scripts/jtable/external/json2.js"></script>
+    <!-- Core jTable script file -->
+    <script type="text/javascript" src="Scripts/jtable/jquery.jtable.js"></script>
+    <!-- ASP.NET Web Forms extension for jTable -->
+    <script type="text/javascript" src="Scripts/jtable/extensions/jquery.jtable.aspnetpagemethods.js"></script>
+    <script type="text/javascript" src="Scripts/menuicin.js"></script>
+    <link href="Styles/Site.css" rel="stylesheet" type="text/css" /><link href="Styles/first.css" rel="stylesheet" type="text/css" />
+    
+  
+    <script type="text/javascript">
+
+
+        function sokak_bas() {
+            var x = document.getElementById("MainContent_gizliLabel");
+            x.value = "1";
+            //e.preventDefault();
+            //alert("loaddan önce");
+            $('#TableContainer').jtable('load', function () {
+                __doPostBack('', '');
+            });
+            //setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$DropDownList1\&#39;,\&#39;\&#39;)&#39;, 0) ;
+            //__doPostBack(\&#39;ctl00$MainContent$DropDownList3\&#39;,\&#39;\&#39;)&#39;
+            //alert("geldi1");
+            //var y = document.getElementById("MainContent_Image2");
+            //y.src = "GuvenlikResim.aspx" ;
+            //alert("geldi2");
+            //$(document).jtable('reload');
+            //callback(document);
+            //deneme();
+            //__doPostBack();
+
+
+        }
+
+		//$(document).ready(function () {
+		//	$("#TextBox1"). (function () {
+		//		$("#TextBox1").text("");
+		//	});
+		//	$("#TextBox2").click(function () {
+		//		$("#test2").html("");
+		//	});
+		//	$("#TextBox3").click(function () {
+		//		$("#test3").val("");
+  //          });
+		//	$("#yazilankod").click(function () {
+		//		$("#yazilankod").val("");
+		//	});
+	//	});
+
+		//$('#TextBox1').focus(function () {
+		//	$(this).addClass("txtFocus");
+		//});
+		//jQuery on blur method for Asp.net control
+		//$('#TextBox1').blur(function () {
+		//	$(this).removeClass("txtFocus");
+		//});
+
+		$(function () {
+
+			$('input[type=text]').focus(function () {
+
+				$(this).val('');
+            });
+
+			
+		});
+     	
+
+        function deneme() {
+            //__doPostBack(document);
+            //alert("Geldi")
+            //e.preventDefault();
+            //$('#TableContainer').jtable('load');
+        }
+        function temizle() {
+            var x = document.getElementById("MainContent_TextBox1");
+            x.value = "";
+
+            //            var xxx = document.getElementById("MainContent_DropDownList1");
+            //            __doPostBack('ctl00$MainContent$DropDownList1', '');
+            //alert(xxx);
+            //__doPostBack('ctl00$MainContent$DropDownList1', '');
+        }
+
+     
+        function temizle2() {
+            var x = document.getElementById("MainContent_TextBox2");
+            x.value = "";
+        }
+
+        function temizle3() {
+            var x = document.getElementById("MainContent_yazilankod");
+            x.value = "";
+        }
+
+        function temizle4() {
+            var x = document.getElementById("MainContent_TextBox3");
+            x.value = "";
+        }
+    
+
+    </script>
+    <style type="text/css">
+        .auto-style3 {
+        }
+        pre
+        {
+            border: solid 1px #ccc;
+            background-color: #ffa;
+            padding: 5px;
+            color: #a00;
+            line-height: 1.5em;
+        }
+        .auto-style4 {
+            height: 84px;
+        }
+        .auto-style5 {
+            width: 242px;
+            height: 36px;
+        }
+        .auto-style6 {
+            height: 36px;
+            width: 375px;
+        }
+        .auto-style7 {
+            width: 375px;
+        }
+		.auto-style12 {
+
+			Height:32px;
+			Width:500px;
+
+		}
+        </style>
+    <link rel="stylesheet" type="text/css" href="Scripts/notifyit/notifIt.css" />
+    <script type="text/javascript" src="Scripts/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="Scripts/notifyit/notifIt.js"></script>
+<link href="/WebResource.axd?d=dIK30lLCnS2n1MaXw_eI19hRX33LPnwsdN_gtdI5SJU8doSjNiL7Eu-098J4d-XiqIqouvodcUAlKyL8yH-IqtwM4kiVgruDUEw8yxYeBqKUvbrAqjbK3y7YHDCr6KPNFc7sfV1COjpB6N2pKuqS0Q2&amp;t=634946429620000000" type="text/css" rel="stylesheet" /></head>
+<body>
+    <form method="post" action="./" onsubmit="javascript:return WebForm_OnSubmit();" id="ctl01">
+<div class="aspNetHidden">
+<input type="hidden" name="MainContent_ToolkitScriptManager1_HiddenField" id="MainContent_ToolkitScriptManager1_HiddenField" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="MainContent_tabbb_ClientState" id="MainContent_tabbb_ClientState" value="{&quot;ActiveTabIndex&quot;:0,&quot;TabEnabledState&quot;:[true,true,true],&quot;TabWasLoadedOnceState&quot;:[false,false,false]}" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTUzOTkwNDI0OA9kFgJmD2QWAgIDD2QWBgIBD2QWFAIFDxBkDxZSZgIBAgICAwIEAgUCBgIHAggCCQIKAgsCDAINAg4CDwIQAhECEgITAhQCFQIWAhcCGAIZAhoCGwIcAh0CHgIfAiACIQIiAiMCJAIlAiYCJwIoAikCKgIrAiwCLQIuAi8CMAIxAjICMwI0AjUCNgI3AjgCOQI6AjsCPAI9Aj4CPwJAAkECQgJDAkQCRQJGAkcCSAJJAkoCSwJMAk0CTgJPAlACURZSEAUQTMO8dGZlbiBTZcOnaW5pegUCLTFnEAUeQURBTkEgICAgICAgICAgICAgICAgICAgICAgICAgBQExZxAFHkFESVlBTUFOICAgICAgICAgICAgICAgICAgICAgIAUBMmcQBR9BRllPTktBUkFIxLBTQVIgICAgICAgICAgICAgICAgBQEzZxAFH0HEnlJJICAgICAgICAgICAgICAgICAgICAgICAgICAFATRnEAUeQUtTQVJBWSAgICAgICAgICAgICAgICAgICAgICAgBQI2OGcQBR5BTUFTWUEgICAgICAgICAgICAgICAgICAgICAgICAFATVnEAUeQU5LQVJBICAgICAgICAgICAgICAgICAgICAgICAgBQE2ZxAFHkFOVEFMWUEgICAgICAgICAgICAgICAgICAgICAgIAUBN2cQBR5BUkRBSEFOICAgICAgICAgICAgICAgICAgICAgICAFAjc1ZxAFH0FSVFbEsE4gICAgICAgICAgICAgICAgICAgICAgICAFAThnEAUeQVlESU4gICAgICAgICAgICAgICAgICAgICAgICAgBQE5ZxAFH0JBTElLRVPEsFIgICAgICAgICAgICAgICAgICAgICAFAjEwZxAFHkJBUlRJTiAgICAgICAgICAgICAgICAgICAgICAgIAUCNzRnEAUeQkFUTUFOICAgICAgICAgICAgICAgICAgICAgICAgBQI3MmcQBR5CQVlCVVJUICAgICAgICAgICAgICAgICAgICAgICAFAjY5ZxAFIELEsExFQ8SwSyAgICAgICAgICAgICAgICAgICAgICAgBQIxMWcQBSBCxLBOR8OWTCAgICAgICAgICAgICAgICAgICAgICAgIAUCMTJnEAUgQsSwVEzEsFMgICAgICAgICAgICAgICAgICAgICAgICAFAjEzZxAFHkJPTFUgICAgICAgICAgICAgICAgICAgICAgICAgIAUCMTRnEAUeQlVSRFVSICAgICAgICAgICAgICAgICAgICAgICAgBQIxNWcQBR5CVVJTQSAgICAgICAgICAgICAgICAgICAgICAgICAFAjE2ZxAFH8OHQU5BS0tBTEUgICAgICAgICAgICAgICAgICAgICAFAjE3ZxAFH8OHQU5LSVJJICAgICAgICAgICAgICAgICAgICAgICAFAjE4ZxAFH8OHT1JVTSAgICAgICAgICAgICAgICAgICAgICAgICAFAjE5ZxAFIERFTsSwWkzEsCAgICAgICAgICAgICAgICAgICAgICAgBQIyMGcQBR9ExLBZQVJCQUtJUiAgICAgICAgICAgICAgICAgICAgBQIyMWcQBR9Ew5xaQ0UgICAgICAgICAgICAgICAgICAgICAgICAgBQI4MWcQBR9FRMSwUk5FICAgICAgICAgICAgICAgICAgICAgICAgBQIyMmcQBR9FTEFaScSeICAgICAgICAgICAgICAgICAgICAgICAgBQIyM2cQBR9FUlrEsE5DQU4gICAgICAgICAgICAgICAgICAgICAgBQIyNGcQBR5FUlpVUlVNICAgICAgICAgICAgICAgICAgICAgICAFAjI1ZxAFIUVTS8SwxZ5FSMSwUiAgICAgICAgICAgICAgICAgICAgIAUCMjZnEAUfR0FaxLBBTlRFUCAgICAgICAgICAgICAgICAgICAgIAUCMjdnEAUfR8SwUkVTVU4gICAgICAgICAgICAgICAgICAgICAgIAUCMjhnEAUhR8OcTcOcxZ5IQU5FICAgICAgICAgICAgICAgICAgICAgBQIyOWcQBR9IQUtLQVLEsCAgICAgICAgICAgICAgICAgICAgICAgBQIzMGcQBR5IQVRBWSAgICAgICAgICAgICAgICAgICAgICAgICAFAjMxZxAFH0nEnkRJUiAgICAgICAgICAgICAgICAgICAgICAgICAFAjc2ZxAFHklTUEFSVEEgICAgICAgICAgICAgICAgICAgICAgIAUCMzJnEAUfxLBTVEFOQlVMICAgICAgICAgICAgICAgICAgICAgIAUCMzRnEAUgxLBaTcSwUiAgICAgICAgICAgICAgICAgICAgICAgICAFAjM1ZxAFH0tBSFJBTUFOTUFSQcWeICAgICAgICAgICAgICAgICAFAjQ2ZxAFH0tBUkFCw5xLICAgICAgICAgICAgICAgICAgICAgICAFAjc4ZxAFHktBUkFNQU4gICAgICAgICAgICAgICAgICAgICAgIAUCNzBnEAUeS0FSUyAgICAgICAgICAgICAgICAgICAgICAgICAgBQIzNmcQBR5LQVNUQU1PTlUgICAgICAgICAgICAgICAgICAgICAFAjM3ZxAFH0tBWVNFUsSwICAgICAgICAgICAgICAgICAgICAgICAFAjM4ZxAFHktJUklLS0FMRSAgICAgICAgICAgICAgICAgICAgIAUCNzFnEAUfS0lSS0xBUkVMxLAgICAgICAgICAgICAgICAgICAgIAUCMzlnEAUgS0lSxZ5FSMSwUiAgICAgICAgICAgICAgICAgICAgICAFAjQwZxAFIEvEsEzEsFMgICAgICAgICAgICAgICAgICAgICAgICAgBQI3OWcQBR9LT0NBRUzEsCAgICAgICAgICAgICAgICAgICAgICAgBQI0MWcQBR5LT05ZQSAgICAgICAgICAgICAgICAgICAgICAgICAFAjQyZxAFH0vDnFRBSFlBICAgICAgICAgICAgICAgICAgICAgICAFAjQzZxAFHk1BTEFUWUEgICAgICAgICAgICAgICAgICAgICAgIAUCNDRnEAUfTUFOxLBTQSAgICAgICAgICAgICAgICAgICAgICAgIAUCNDVnEAUfTUFSRMSwTiAgICAgICAgICAgICAgICAgICAgICAgIAUCNDdnEAUfTUVSU8SwTiAgICAgICAgICAgICAgICAgICAgICAgIAUCMzNnEAUfTVXEnkxBICAgICAgICAgICAgICAgICAgICAgICAgIAUCNDhnEAUfTVXFniAgICAgICAgICAgICAgICAgICAgICAgICAgIAUCNDlnEAUgTkVWxZ5FSMSwUiAgICAgICAgICAgICAgICAgICAgICAFAjUwZxAFIE7EsMSeREUgICAgICAgICAgICAgICAgICAgICAgICAgBQI1MWcQBR5PUkRVICAgICAgICAgICAgICAgICAgICAgICAgICAFAjUyZxAFH09TTUFOxLBZRSAgICAgICAgICAgICAgICAgICAgICAFAjgwZxAFH1LEsFpFICAgICAgICAgICAgICAgICAgICAgICAgICAFAjUzZxAFHlNBS0FSWUEgICAgICAgICAgICAgICAgICAgICAgIAUCNTRnEAUeU0FNU1VOICAgICAgICAgICAgICAgICAgICAgICAgBQI1NWcQBSBTxLDEsFJUICAgICAgICAgICAgICAgICAgICAgICAgIAUCNTZnEAUfU8SwTk9QICAgICAgICAgICAgICAgICAgICAgICAgIAUCNTdnEAUfU8SwVkFTICAgICAgICAgICAgICAgICAgICAgICAgIAUCNThnEAUfxZ5BTkxJVVJGQSAgICAgICAgICAgICAgICAgICAgIAUCNjNnEAUfxZ5JUk5BSyAgICAgICAgICAgICAgICAgICAgICAgIAUCNzNnEAUgVEVLxLBSREHEniAgICAgICAgICAgICAgICAgICAgICAFAjU5ZxAFHlRPS0FUICAgICAgICAgICAgICAgICAgICAgICAgIAUCNjBnEAUeVFJBQlpPTiAgICAgICAgICAgICAgICAgICAgICAgBQI2MWcQBR9UVU5DRUzEsCAgICAgICAgICAgICAgICAgICAgICAgBQI2MmcQBR9VxZ5BSyAgICAgICAgICAgICAgICAgICAgICAgICAgBQI2NGcQBR5WQU4gICAgICAgICAgICAgICAgICAgICAgICAgICAFAjY1ZxAFHllBTE9WQSAgICAgICAgICAgICAgICAgICAgICAgIAUCNzdnEAUeWU9aR0FUICAgICAgICAgICAgICAgICAgICAgICAgBQI2NmcQBR5aT05HVUxEQUsgICAgICAgICAgICAgICAgICAgICAFAjY3ZxYBZmQCCw8QZGQWAGQCEQ8QZGQWAGQCFQ8PFgIeBFRleHRlZGQCFw8PFgIeEkxhc3RBY3RpdmVUYWJJbmRleGZkZAIbDw8WAh8ABQEzZGQCHQ8PFgIeB1Zpc2libGVoZGQCHw8PFgIfAmhkZAIhDw8WAh8CaGRkAiUPZBYCZg9kFggCAQ8PFgIfAmhkZAIDDzwrABECAA8WBB4LXyFEYXRhQm91bmRnHgtfIUl0ZW1Db3VudGZkDBQrAABkAgkPDxYCHwAFHzxiIHN0eWxlPSdjb2xvcjpSZWQnPjk3LDM0OTwvYj5kZAIPDw8WAh8ABR88YiBzdHlsZT0nY29sb3I6UmVkJz4yMyw2NTI8L2I+ZGQCAw8PFgIfAAU5T25saW5lIFppeWFyZXTDp2kgU2F5xLFzxLEgOiA8YiBzdHlsZT0nY29sb3I6UmVkJz4xMzU8L2I+ZGQCBQ8PFgIfAAVAVG9wbGFtIFppeWFyZXTDp2kgU2F5xLFzxLEgOiA8YiBzdHlsZT0nY29sb3I6UmVkJz4yOCw1NTIsMTc5PC9iPmRkGAMFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYBBRdjdGwwMCRNYWluQ29udGVudCR0YWJiYgUbY3RsMDAkTWFpbkNvbnRlbnQkR3JpZFZpZXcxDzwrAAwBCGZkBRdjdGwwMCRNYWluQ29udGVudCR0YWJiYg8PZGZkT23ge7o3J2CBNf5Mrec/A/A2TJMstmnF3GwIqBheENk=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['ctl01'];
+if (!theForm) {
+    theForm = document.ctl01;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=Hus9SsplPVPfFsvCEVH7kuGxSncj-NIA5tYiTy6h6U5B1cA9wzZN38IRxWPvoMoPqw_SdbxlR0VRRGYZCXIH82yaSr9wWD71WSfffvBnSZI1&amp;t=638292211165186153" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=5olZX0Wx6i9U9PJtXTiTrzG6Il6U2NMRszLR-RzCGW-IGGVf4Ood1IkI6nxqdy_nLF64GqeIhD4DUrhYHbNbJX1MklZ5-5UWx2Kzn8uCIemFFHZPdLqt1gKyGjliMR_ttZ0BFNbs_M0CzUb_SiOGOwxZHo5ZhCZBus70gj8KQHM1&amp;t=ffffffffaec193f6" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=7syDHV15XtxhNccSDp4OF6xGNzRee6HtXIxPOthSLzm3I55C7fkTOVfBjovSHm0c-JZ1iLxq_vRVG2b7qXuBm2iLwl7Fzug1FcWFFFk2SxuwR2H8F0eS-X1ms62nq69uJfuVSCIFCCZR3zPF8U1ZLw2&amp;t=23c9c237" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/ScriptResource.axd?d=zqDVItjuJ-SC3bQVGVlxevsJgxXccHrB4RDzJbEWSQgp0D2zI7S34iMYMZpjQwSBTRy67-Jd7NJ0p8fjdihYJY-rEOtjRurbxk-uUYhap0CsuFdBf1fAqz5irX2FGwQD840iHtwP3evhsin5BhC3dw2&amp;t=23c9c237" type="text/javascript"></script>
+<script src="/default.aspx?_TSM_HiddenField_=MainContent_ToolkitScriptManager1_HiddenField&amp;_TSM_CombinedScripts_=%3b%3bAjaxControlToolkit%2c+Version%3d4.1.7.123%2c+Culture%3dneutral%2c+PublicKeyToken%3d28f01b0e84b6d53e%3aen-US%3a44981e4a-f654-4c69-b806-cb922fc13d56%3ade1feab2%3af9cec9bc%3aa0b0f951%3aa67c2700" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+function WebForm_OnSubmit() {
+if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+//]]>
+</script>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="CA0B0334" />
+	<input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+	<input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAFuLFwdss9Y3sFNEvGW5vU1i50ekncn0VRQ8fZ9yJU4eKP7U0ExXmp4jP3AVq6vgTm5Xi7mo4ysmsDhrFLKR8JAvcJIjZOtWccXxF9vxMsnuyq9iGQ5JQmoiI1O5+IGnDlHRoYvntHnP77gKbY28+XNSRobIlBFb6NG0/F0k2RL3hWIuom9OqAjCWGiH66ATJ/lfE12nKlhFvhh1wxjhLw8BF/s07ePbFs2OeQdWbf5e9Y6k6gaAEIsE6dSa74Bxw9WKbnu91puTOu5ftaWr0BddyPxtFny6fqIRa86+YSedmHS+HwKN4p85MCqFJs7Fe0TQufflEAB6ZaG0Z1feT2UsgjBatDZ+j+K3PW+3M6i0vYAAR+cmWBhTBHmhUff1PYb+SvkrbvY6W/E5RM7HaS5woPP7Zonv4jF9hWASSx9WtP2V5DXWYxCNJnQsk04notUXSyQjZOiPORLPgAOKPGHMCxszkd1T4bXfbpC9BMjN9rX21EGEgJ2WZ5IMsFQ5jwc6+hckrkXDVAj5/cxl0eMwBBkBbdSkc3vBeEWHDtvHH37awYSSji7mFkDxPvjvljYmtgxgplTFpxM/U0r0A/XH9eYoHHVQEU9kz00zx3nS/WDMnT5+K55PqhzInkVfTctG6AUvgQ15MrQUZJMPeJVSNaQc0+XgufUwFxWU6rKLwwqPx+RXbOgTeVwwNzN4+NkVpR74bqNI2pt3xUIhxIFjHX1lw7D8WfdAb+Hal1EELpU7XfjQ+3htcoTZYGN87WKTxUByakBIIHpp5YpYWnkutwyQx884G/3oN687U7ZoxN3C5bGUoGZkIqSkjbdL9pbrng2yLM6+aS8QX/Ww32FGMWg6CmZWYG7HlfMWZLTvvzfq81zogkqoy2JI+OA6mV0I0Oh/SHdutccgtg2y1mVEJNY4qDZhGpqP9CakSnoQFuOdm7Ou1526wZ/iA9lhv1mdhcexXjbZ7AB2CsmrTsmiKbl3giRyAkCJNqobR5OylQtXURhsaAts0AlhgkiG5HTAjlKSCT7Ym5tE74bOgnhrN8A3O0TQNOs5QWihSn4tEntL78dEg295FmlhfaJZReSc4h23nejECyknNiulEm5zltBazOHENa79GWntoaeAKHKp+DMAHTaYZuEL3wM0rMHylGqnSmDNjB2v3h4N7RqwLGA2+2sqVsxBA86wGdurOx3qfMa7kCZICg9ABRn0QeUXzn6+uLaLLbvmpv4ThJFh/P3s2R+VvmrncVaYHNdJfwe13ChQ+kJN2nF16HcnaSlCmhPZiq+vQ1wKe3V+vPdrgzMSTOWD3v28TBlpwo8Ojj1MLHD/DFva3ZMIGqipqw+CRuC81OtITHOhs6m5nq6j3h2un5Zd4S5zeLYIQLHapv83/8+nJJK41HETewRtTsIkP1HZNb9YkrqjmeEYR4Vd/QQkZSY7EOWuivLrF7vmZUyArlOCcDjfG5S99uya103ogY7KKEknYARa9y/QhjiHjJ7St1+m1/jv4XM8puuY5bq7/UIKuR/beuUyaSwRlYU3ye4+6/+L4Yo/uxnD2V7TpDGso+J4Ezv61e+IKKFqvju10MC+sDxgJE7/XUItjbOUr2tVY0h/1DUzYb20Ktjb/hDRa7QfCYUyzOpM/EGiNSFnBM7JzaYKARUCh4esCgT2sGiQMDq3XKCzVgKGbgTVweRwZVPjC8m0rcC6zEcMgxo3qKu+rrZRcOi7ru0b0d5o/gkB4KYdLf3CTToTpRSV5QJVcfcIL5/1l/pWoGd0Ss3q3hbYtkAfqwqWSczrU030lkGgnfkyKnqQBZeJ/V8zTEHz/HuQHUWH+vLQ4OHkBOXMnmR8n4nV8IUGSB2vpLfmGzYlmDrf7ilyaBAEyduqvOU1SNJp0kTkCHHMkmh5RPnd3wctyww89JbDbeLvgriEoeDSvqYgLrI1t85EhEvrQrQlAk1u/ucN8U3uSLiv+oecZsSZ5pkdClTlMkPb+uc=" />
+</div>
+    <div class="page">
+        <div>
+            <img alt="ss" src="Image/web_baslik.png" width="100%" height="100%" />
+        </div>
+        <div class="header">
+            <div id="sse2">
+                <div id="sses2">
+                    <ul>
+                        <li><a href="http://postakodu.ptt.gov.tr"><b>GENEL SORGU</b></a></li>
+                        <li><a href="http://www.ptt.gov.tr"><b>PTT Ana Sayfa</b></a></li>
+           
+                        <li><a href="http://postakodu.ptt.gov.tr/Dosyalar/adres.pdf" target="_blank" ><b>ADRES STANDARDI</b></a> </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="ana_sayfa">
+            <div class="main">
+                
+    <br />
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$MainContent$ToolkitScriptManager1', 'ctl01', ['tctl00$MainContent$updatePanel1','MainContent_updatePanel1'], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+    <div class="tasiyici_bolum">
+        <div>
+            <table class="anaTablo">
+                <tr>
+                    <td>
+                        <span id="MainContent_Label2" class="labels">İL(PROVINCE) : </span>
+                    </td>
+                    <td>
+                        <select name="ctl00$MainContent$DropDownList1" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$DropDownList1\&#39;,\&#39;\&#39;)&#39;, 0)" id="MainContent_DropDownList1" class="styled-select auto-style12">
+	<option selected="selected" value="-1">L&#252;tfen Se&#231;iniz</option>
+	<option value="1">ADANA                         </option>
+	<option value="2">ADIYAMAN                      </option>
+	<option value="3">AFYONKARAHİSAR                </option>
+	<option value="4">AĞRI                          </option>
+	<option value="68">AKSARAY                       </option>
+	<option value="5">AMASYA                        </option>
+	<option value="6">ANKARA                        </option>
+	<option value="7">ANTALYA                       </option>
+	<option value="75">ARDAHAN                       </option>
+	<option value="8">ARTVİN                        </option>
+	<option value="9">AYDIN                         </option>
+	<option value="10">BALIKESİR                     </option>
+	<option value="74">BARTIN                        </option>
+	<option value="72">BATMAN                        </option>
+	<option value="69">BAYBURT                       </option>
+	<option value="11">BİLECİK                       </option>
+	<option value="12">BİNG&#214;L                        </option>
+	<option value="13">BİTLİS                        </option>
+	<option value="14">BOLU                          </option>
+	<option value="15">BURDUR                        </option>
+	<option value="16">BURSA                         </option>
+	<option value="17">&#199;ANAKKALE                     </option>
+	<option value="18">&#199;ANKIRI                       </option>
+	<option value="19">&#199;ORUM                         </option>
+	<option value="20">DENİZLİ                       </option>
+	<option value="21">DİYARBAKIR                    </option>
+	<option value="81">D&#220;ZCE                         </option>
+	<option value="22">EDİRNE                        </option>
+	<option value="23">ELAZIĞ                        </option>
+	<option value="24">ERZİNCAN                      </option>
+	<option value="25">ERZURUM                       </option>
+	<option value="26">ESKİŞEHİR                     </option>
+	<option value="27">GAZİANTEP                     </option>
+	<option value="28">GİRESUN                       </option>
+	<option value="29">G&#220;M&#220;ŞHANE                     </option>
+	<option value="30">HAKKARİ                       </option>
+	<option value="31">HATAY                         </option>
+	<option value="76">IĞDIR                         </option>
+	<option value="32">ISPARTA                       </option>
+	<option value="34">İSTANBUL                      </option>
+	<option value="35">İZMİR                         </option>
+	<option value="46">KAHRAMANMARAŞ                 </option>
+	<option value="78">KARAB&#220;K                       </option>
+	<option value="70">KARAMAN                       </option>
+	<option value="36">KARS                          </option>
+	<option value="37">KASTAMONU                     </option>
+	<option value="38">KAYSERİ                       </option>
+	<option value="71">KIRIKKALE                     </option>
+	<option value="39">KIRKLARELİ                    </option>
+	<option value="40">KIRŞEHİR                      </option>
+	<option value="79">KİLİS                         </option>
+	<option value="41">KOCAELİ                       </option>
+	<option value="42">KONYA                         </option>
+	<option value="43">K&#220;TAHYA                       </option>
+	<option value="44">MALATYA                       </option>
+	<option value="45">MANİSA                        </option>
+	<option value="47">MARDİN                        </option>
+	<option value="33">MERSİN                        </option>
+	<option value="48">MUĞLA                         </option>
+	<option value="49">MUŞ                           </option>
+	<option value="50">NEVŞEHİR                      </option>
+	<option value="51">NİĞDE                         </option>
+	<option value="52">ORDU                          </option>
+	<option value="80">OSMANİYE                      </option>
+	<option value="53">RİZE                          </option>
+	<option value="54">SAKARYA                       </option>
+	<option value="55">SAMSUN                        </option>
+	<option value="56">SİİRT                         </option>
+	<option value="57">SİNOP                         </option>
+	<option value="58">SİVAS                         </option>
+	<option value="63">ŞANLIURFA                     </option>
+	<option value="73">ŞIRNAK                        </option>
+	<option value="59">TEKİRDAĞ                      </option>
+	<option value="60">TOKAT                         </option>
+	<option value="61">TRABZON                       </option>
+	<option value="62">TUNCELİ                       </option>
+	<option value="64">UŞAK                          </option>
+	<option value="65">VAN                           </option>
+	<option value="77">YALOVA                        </option>
+	<option value="66">YOZGAT                        </option>
+	<option value="67">ZONGULDAK                     </option>
+
+</select>
+                        <span id="MainContent_CustomValidator1" style="color:#FF3300;font-weight:bold;visibility:hidden;">* Lütfen İl Seçiniz</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span id="MainContent_Label3" class="labels">İLÇE(DISTRICT) : </span>
+                    </td>
+                    <td>
+                        <select name="ctl00$MainContent$DropDownList2" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$DropDownList2\&#39;,\&#39;\&#39;)&#39;, 0)" id="MainContent_DropDownList2" class="styled-select auto-style12">
+
+</select>
+                        <span id="MainContent_CustomValidator2" style="color:#FF3300;font-weight:bold;visibility:hidden;">* Lütfen İlçe Seçiniz</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span id="MainContent_Label4" class="labels">MAHALLE-KÖY/SEMT/PK(SUBURB-AREA/TOWN/PC) : </span>
+                    </td>
+                    <td>
+                        <select name="ctl00$MainContent$DropDownList3" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$DropDownList3\&#39;,\&#39;\&#39;)&#39;, 0)" id="MainContent_DropDownList3" class="styled-select auto-style12">
+
+</select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span id="MainContent_Label7" class="baslikEtiket">POSTA KODUNUZ (ZIP CODE) : </span>
+                    </td>
+                    <td>
+                        <span id="MainContent_Label1" class="aciklaEtiket"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr />
+        <!-- Main Table(You can define padding accordingly) -->
+        
+        <table style="width:100%; border:none; padding:0px"  >
+            <tr>
+                <td class="auto-style4">
+                    <div id="MainContent_tabbb" class="ajax__tab_xp" style="width:70%;visibility:hidden;">
+	<div id="MainContent_tabbb_header" class="ajax__tab_header">
+		<span id="MainContent_tabbb_sokakTab_tab"><span class="ajax__tab_outer"><span class="ajax__tab_inner"><a class="ajax__tab_tab" id="__tab_MainContent_tabbb_sokakTab" href="#" style="text-decoration:none;"><span>Sokak/Cadde Sorgulama</span></a></span></span></span><span id="MainContent_tabbb_postakodTab_tab"><span class="ajax__tab_outer"><span class="ajax__tab_inner"><a class="ajax__tab_tab" id="__tab_MainContent_tabbb_postakodTab" href="#" style="text-decoration:none;"><span>Posta Kodu Sorgulama</span></a></span></span></span><span id="MainContent_tabbb_kurumTab_tab"><span class="ajax__tab_outer"><span class="ajax__tab_inner"><a class="ajax__tab_tab" id="__tab_MainContent_tabbb_kurumTab" href="#" style="text-decoration:none;"><span>Kurum Sorgulama</span></a></span></span></span>
+	</div><div id="MainContent_tabbb_body" class="ajax__tab_body" style="height:70px;display:block;">
+		<div id="MainContent_tabbb_sokakTab" id="MainContent_tabbb_sokakTab" class="ajax__tab_panel">
+			
+                                <table style="width:100%; padding:1px; border-collapse: collapse; border-spacing: 0; "  >
+                                    <tr >
+                                        <td  >
+                                            <span id="MainContent_tabbb_sokakTab_Label5" class="head_etiket">Sokak/Cadde Sorgulama (Street Search)</span>
+                                        </td>
+                                    </tr>
+                                    <tr >
+                                        <td style=" vertical-align:text-top; width:50%" >
+                                            <span>Sokak/Cadde Adı (Street Name) :</span>
+                                        </td>
+                                        <td style="width:50%">
+                                            <input name="ctl00$MainContent$tabbb$sokakTab$TextBox1" type="text" maxlength="20" id="MainContent_tabbb_sokakTab_TextBox1" class="bilgiGiris" />
+                                            <span id="MainContent_tabbb_sokakTab_CustomValidator3" style="color:#FF3300;font-size:X-Small;font-weight:bold;visibility:hidden;"><br>* 2 ile 20 arasında karaker giriniz.</span>
+                                        </td>
+                                        
+                                    </tr>
+                                </table>
+                            
+		</div><div id="MainContent_tabbb_postakodTab" id="MainContent_tabbb_postakodTab" class="ajax__tab_panel" style="display:none;visibility:hidden;">
+			
+                                <table style="width:100%; padding:1px; border-collapse: collapse; border-spacing: 0; "  >
+                                    <tr>
+                                        <td>
+                                            <span id="MainContent_tabbb_postakodTab_Label6" class="head_etiket">Posta Kodu Sorgulama (Search ZIP Code)</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50%;">
+                                            <span id="MainContent_tabbb_postakodTab_Label11">Aranacak Posta Kodu (ZIP CODE) : </span>
+                                        </td>
+                                        <td style="width:50%">
+                                            
+                                            <input name="ctl00$MainContent$tabbb$postakodTab$TextBox2" type="text" maxlength="5" id="MainContent_tabbb_postakodTab_TextBox2" class="bilgiGiris" />
+                                            <span id="MainContent_tabbb_postakodTab_CustomValidator4" style="color:#FF3300;font-size:X-Small;font-weight:bold;visibility:hidden;">5 rakam giriniz.</span>
+                                        </td>
+                                        
+
+                                    </tr>
+                                </table>
+                            
+		</div><div id="MainContent_tabbb_kurumTab" id="MainContent_tabbb_kurumTab" class="ajax__tab_panel" style="display:none;visibility:hidden;">
+			
+                                <table style="width:100%; padding:1px; border-collapse: collapse; border-spacing: 0; "  >
+                                    <tr>
+                                        <td>
+                                            <span id="MainContent_tabbb_kurumTab_Label8" class="head_etiket">Kurum Sorgulama (Search Organization)</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50%">
+                                            <span id="MainContent_tabbb_kurumTab_Label10">Sorgulanacak Kurum (Organization Name) : </span>
+                                        </td>
+                                        <td style="width:50%">
+                                            <input name="ctl00$MainContent$tabbb$kurumTab$TextBox3" type="text" maxlength="20" id="MainContent_tabbb_kurumTab_TextBox3" class="bilgiGiris" />
+                                           
+                                        </td>
+                                                   </tr>
+                                </table>
+                            
+		</div>
+	</div>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <table style="padding:0px; border:1px solid"  cellspacing="0" cellpadding="0">
+                                    <span id="MainContent_Labeluyar2" style="color:Red;background-color:Yellow;">Güvenlik Doğrulaması Olmaksızın Kalan Sorgulama Hakkınız : </span>
+                                     <span id="MainContent_Labeluyar1" style="color:Red;background-color:Yellow;">3</span>
+                        <tr ID="resimtr" style=" padding:0px; margin:0px; " >
+
+                            <td  style="padding:0px;">
+                                
+                            </td>
+                            <td  style="padding:0px;">
+                                
+                                   
+                            </td>
+                          
+                        </tr>
+                        <tr style="border:solid">
+                            <td ID="resimyen" style="align-content:flex-start" >
+                                
+                            </td>
+                            <td style="padding:2px;">
+                                <input type="submit" name="ctl00$MainContent$Button1" value="SORGULA" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$MainContent$Button1&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="MainContent_Button1" class="dugme" />
+                                
+                            </td>
+   
+                        </tr>
+
+                      </table>
+                    
+                </td>
+            </tr>
+        </table>
+        <!-- END OF MAIN TABLE -->
+        <!-- TAB DENEME BAS   -->
+        <!-- TAB DENEME END   -->
+        
+        <div id="MainContent_updatePanel1">
+	
+                <div>
+                    
+                    <div>
+
+	</div>
+                    <table class="ui-accordion">
+                        <tr>
+                            <td align="center">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                <table class="ui-accordion">
+                                    <tr>
+                                        <!-- <td align="center" class="auto-style3" colspan="3"><a href="Dosyalar/pk_list.zip">
+                                            <a id="MainContent_LinkButton1" href="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$MainContent$LinkButton1&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, true))">Posta Kodu Özet Tablosu : </a>
+                                            </a>
+                                            <span id="MainContent_Label13" style="color:Maroon;">Dosyanın İndirilme Sayısı: </span>
+                                            <span id="MainContent_Label12" style="color:#3333FF;"><b style='color:Red'>97,349</b></span>
+                                        </td>
+										-->
+                                    </tr>
+                                    <tr>
+                                        <td class="auto-style3">&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                      <tr>
+                                        <td align="center" class="auto-style3" colspan="3">
+                                           
+                                            
+                                            </a>
+                                            
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            
+</div>
+        <hr />
+        
+    </div>
+
+            </div>
+            <center></center>
+            <hr />
+            <!--visitorInfo-->
+            <div class="statistics_visitor">
+            <table style=" margin-left:auto;margin-right:auto">
+            <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+            <span id="onlineVisitorCount" class="" style="color:Blue">Online Ziyaretçi Sayısı : <b style='color:Red'>135</b></span>
+            </td>
+            <td>
+            -
+            </td>
+            <td>
+            <span id="totalVisitorCount" class="" style="color:Blue">Toplam Ziyaretçi Sayısı : <b style='color:Red'>28,552,179</b></span>
+            </td>
+            <td>
+            </td>
+            
+            </tr>
+            </table>
+                <hr />
+                <br />
+            </div>
+            <div>
+           
+            <center></center>
+            <center><a>©Copyright 2015</a>&nbsp; <a href="mailto:postakodu@ptt.gov.tr?subject=Posta Kodu" style=" text-decoration:underline">postakodu@ptt.gov.tr</a></center> 
+            
+            </div>
+            <div class="footer">
+                <img src="Image/alt_alt.jpg" width="100%">
+            </div>
+        </div>
+    </div>
+    
+<script type="text/javascript">
+//<![CDATA[
+var Page_Validators =  new Array(document.getElementById("MainContent_CustomValidator1"), document.getElementById("MainContent_CustomValidator2"), document.getElementById("MainContent_tabbb_sokakTab_CustomValidator3"), document.getElementById("MainContent_tabbb_postakodTab_CustomValidator4"));
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+var MainContent_CustomValidator1 = document.all ? document.all["MainContent_CustomValidator1"] : document.getElementById("MainContent_CustomValidator1");
+MainContent_CustomValidator1.controltovalidate = "MainContent_DropDownList1";
+MainContent_CustomValidator1.errormessage = "* Lütfen İl Seçiniz";
+MainContent_CustomValidator1.evaluationfunction = "CustomValidatorEvaluateIsValid";
+var MainContent_CustomValidator2 = document.all ? document.all["MainContent_CustomValidator2"] : document.getElementById("MainContent_CustomValidator2");
+MainContent_CustomValidator2.controltovalidate = "MainContent_DropDownList1";
+MainContent_CustomValidator2.errormessage = "* Lütfen İlçe Seçiniz";
+MainContent_CustomValidator2.evaluationfunction = "CustomValidatorEvaluateIsValid";
+var MainContent_tabbb_sokakTab_CustomValidator3 = document.all ? document.all["MainContent_tabbb_sokakTab_CustomValidator3"] : document.getElementById("MainContent_tabbb_sokakTab_CustomValidator3");
+MainContent_tabbb_sokakTab_CustomValidator3.controltovalidate = "MainContent_tabbb_sokakTab_TextBox1";
+MainContent_tabbb_sokakTab_CustomValidator3.errormessage = "<br>* 2 ile 20 arasında karaker giriniz.";
+MainContent_tabbb_sokakTab_CustomValidator3.evaluationfunction = "CustomValidatorEvaluateIsValid";
+var MainContent_tabbb_postakodTab_CustomValidator4 = document.all ? document.all["MainContent_tabbb_postakodTab_CustomValidator4"] : document.getElementById("MainContent_tabbb_postakodTab_CustomValidator4");
+MainContent_tabbb_postakodTab_CustomValidator4.controltovalidate = "MainContent_tabbb_postakodTab_TextBox2";
+MainContent_tabbb_postakodTab_CustomValidator4.errormessage = "5 rakam giriniz.";
+MainContent_tabbb_postakodTab_CustomValidator4.evaluationfunction = "CustomValidatorEvaluateIsValid";
+//]]>
+</script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {var fn = function() {$get("MainContent_ToolkitScriptManager1_HiddenField").value = '';Sys.Application.remove_init(fn);};Sys.Application.add_init(fn);})();
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+    ValidatorOnLoad();
+}
+
+function ValidatorOnSubmit() {
+    if (Page_ValidationActive) {
+        return ValidatorCommonOnSubmit();
+    }
+    else {
+        return true;
+    }
+}
+        
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+
+document.getElementById('MainContent_CustomValidator1').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('MainContent_CustomValidator1'));
+}
+
+document.getElementById('MainContent_CustomValidator2').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('MainContent_CustomValidator2'));
+}
+
+document.getElementById('MainContent_tabbb_sokakTab_CustomValidator3').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('MainContent_tabbb_sokakTab_CustomValidator3'));
+}
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.TabPanel, {"headerTab":$get("__tab_MainContent_tabbb_sokakTab"),"ownerID":"MainContent_tabbb","wasLoadedOnce":false}, null, {"owner":"MainContent_tabbb"}, $get("MainContent_tabbb_sokakTab"));
+});
+
+document.getElementById('MainContent_tabbb_postakodTab_CustomValidator4').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('MainContent_tabbb_postakodTab_CustomValidator4'));
+}
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.TabPanel, {"headerTab":$get("__tab_MainContent_tabbb_postakodTab"),"ownerID":"MainContent_tabbb","wasLoadedOnce":false}, null, {"owner":"MainContent_tabbb"}, $get("MainContent_tabbb_postakodTab"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.TabPanel, {"headerTab":$get("__tab_MainContent_tabbb_kurumTab"),"ownerID":"MainContent_tabbb","wasLoadedOnce":false}, null, {"owner":"MainContent_tabbb"}, $get("MainContent_tabbb_kurumTab"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.TabContainer, {"activeTabIndex":0,"clientStateField":$get("MainContent_tabbb_ClientState"),"onDemand":false,"tabStripPlacement":0,"useVerticalStripPlacement":false}, null, null, $get("MainContent_tabbb"));
+});
+//]]>
+</script>
+<input type="hidden" name="as_sfid" value="AAAAAAXs4HReVPu6FhYm6O2xTHjx5qPVpkyvyc7CgQlqoJgU3cqJ4RlLrnbSb-OsxexNc5r3vWfMoTh8cKIKo8ZYaUSoHTNAis-5XNyQZiuADLfIGOU4tPBZbW1Rp81D9fkpIDDQix1xCwlJJgI5klAl9rxpUO95SwsB4mZfXW5GfJY5WA==" /><input type="hidden" name="as_fid" value="4390029a925863b1881f5ef9bcc512cc09aab58c" /></form>
+</body>
+</html>

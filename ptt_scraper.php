@@ -81,24 +81,13 @@ function initCurl() {
     global $ch;
     if ($ch === null) {
         $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_TCP_KEEPALIVE => 1,
-            CURLOPT_TCP_NODELAY => 1,
-            CURLOPT_ENCODING => 'gzip, deflate',
-            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0',
-            CURLOPT_COOKIEJAR => 'cookies.txt',
-            CURLOPT_COOKIEFILE => 'cookies.txt',
-            CURLOPT_HTTPHEADER => [
-                'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language: tr-TR,tr;q=0.9',
-                'Cache-Control: no-cache',
-                'Connection: keep-alive',
-                'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'
-            ]
-        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, "");
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     }
     return $ch;
 }
@@ -137,17 +126,21 @@ function getEventValidation($html) {
 
 function makeRequest($url, $postData = null) {
     global $ch;
-    $ch = initCurl();
     
-    $cacheKey = $url . serialize($postData);
-    $cachedResponse = getCached($cacheKey);
-    if ($cachedResponse !== null) {
-        return $cachedResponse;
+    if ($ch === null) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, "");
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     }
     
     curl_setopt($ch, CURLOPT_URL, $url);
     
-    if ($postData) {
+    if ($postData !== null) {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
     } else {
@@ -156,82 +149,113 @@ function makeRequest($url, $postData = null) {
     
     $response = curl_exec($ch);
     
-    if(curl_errno($ch)) {
-        throw new Exception(curl_error($ch));
+    if ($response === false) {
+        throw new Exception('Curl error: ' . curl_error($ch));
     }
     
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    if ($httpCode !== 200) {
-        throw new Exception("HTTP Hata Kodu: " . $httpCode);
+    // Debug: İlk isteğin yanıtını kontrol et
+    if ($postData === null) {
+        file_put_contents('debug_response.html', $response);
+        echo "Debug: HTML yanıtı debug_response.html dosyasına kaydedildi.\n";
     }
     
-    setCached($cacheKey, $response);
     return $response;
 }
 
-function saveIlData($ilKodu, $ilData) {
-    $tempDir = 'temp_data';
-    if (!file_exists($tempDir)) {
-        mkdir($tempDir);
+function clearTables($pdo) {
+    try {
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+        $pdo->exec("TRUNCATE TABLE mahalleler");
+        $pdo->exec("TRUNCATE TABLE ilceler");
+        $pdo->exec("TRUNCATE TABLE iller");
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
+        echo "✅ Tablolar başarıyla temizlendi.\n\n";
+    } catch (PDOException $e) {
+        throw new Exception("Tablolar temizlenirken hata oluştu: " . $e->getMessage());
     }
-    file_put_contents("$tempDir/il_$ilKodu.json", json_encode($ilData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 }
 
-function mergeIlData() {
-    $tempDir = 'temp_data';
-    $tumVeriler = [];
-    
-    if (!file_exists($tempDir)) {
-        return $tumVeriler;
+function saveIlData($pdo, $ilKodu, $ilData) {
+    try {
+        // İl ekle
+        $stmt = $pdo->prepare("INSERT INTO iller (il_adi) VALUES (?) ON DUPLICATE KEY UPDATE il_id=LAST_INSERT_ID(il_id)");
+        $stmt->execute([$ilData['il_adi']]);
+        $ilId = $pdo->lastInsertId();
+        
+        // İlçeleri ekle
+        foreach ($ilData['ilceler'] as $ilceKodu => $ilceData) {
+            $stmt = $pdo->prepare("INSERT INTO ilceler (il_id, ilce_adi) VALUES (?, ?) ON DUPLICATE KEY UPDATE ilce_id=LAST_INSERT_ID(ilce_id)");
+            $stmt->execute([$ilId, $ilceData['ilce_adi']]);
+            $ilceId = $pdo->lastInsertId();
+            
+            // Mahalleleri ekle
+            foreach ($ilceData['mahalleler'] as $mahalleKodu => $mahalleData) {
+                $stmt = $pdo->prepare("INSERT INTO mahalleler (ilce_id, mahalle_adi, posta_kodu) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE mahalle_id=LAST_INSERT_ID(mahalle_id)");
+                $stmt->execute([$ilceId, $mahalleData['mahalle_adi'], $mahalleData['posta_kodu']]);
+            }
+        }
+    } catch (PDOException $e) {
+        throw new Exception("Veri kaydedilirken hata oluştu: " . $e->getMessage());
     }
-    
-    $files = glob("$tempDir/il_*.json");
-    foreach ($files as $file) {
-        $data = json_decode(file_get_contents($file), true);
-        $ilKodu = basename($file, '.json');
-        $ilKodu = substr($ilKodu, 3);
-        $tumVeriler[$ilKodu] = $data;
-        unlink($file);
-    }
-    
-    // Klasör boş ise sil
-    $remainingFiles = glob("$tempDir/*");
-    if (empty($remainingFiles)) {
-        rmdir($tempDir);
-    }
-    
-    return $tumVeriler;
 }
 
 try {
+    // Veritabanı bağlantısı
+    $pdo = new PDO(
+        "mysql:host=localhost;charset=utf8mb4",
+        "root",
+        "",
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
+        ]
+    );
+    
+    // create_tables.sql dosyasını çalıştır
+    $sql = file_get_contents(__DIR__ . '/create_tables.sql');
+    $pdo->exec($sql);
+    
+    // Veritabanını seç
+    $pdo->exec("USE ptt_db");
+    
+    // Tabloları temizle
+    clearTables($pdo);
+    
     echo "<span class='ozet'>PTT Posta Kodu Verileri Çekiliyor...</span>\n";
     echo "=====================================\n\n";
     
     $startTime = microtime(true);
     
+    // Ana sayfayı çek
     $response = makeRequest($baseUrl);
     
-    $viewState = getViewState($response);
-    $viewStateGenerator = getViewStateGenerator($response);
-    $eventValidation = getEventValidation($response);
-    
-    if (!preg_match('/<select[^>]*id="MainContent_DropDownList1"[^>]*>(.*?)<\/select>/s', $response, $selectMatch)) {
-        throw new Exception("İl listesi bulunamadı!");
+    // Debug: HTML içeriğini kontrol et
+    echo "HTML içeriği kontrol ediliyor...\n";
+    if (strpos($response, 'MainContent_DropDownList1') === false) {
+        echo "UYARI: DropDownList1 bulunamadı. HTML yanıtı:\n";
+        echo substr($response, 0, 500) . "...\n";
     }
     
-    preg_match_all('/<option\s+value="([^"]+)"\s*>([^<]+)<\/option>/s', $selectMatch[1], $options, PREG_SET_ORDER);
+    // İl listesini al (DropDownList1)
+    $pattern = '/<select[^>]*?name=["\']ctl00\$MainContent\$DropDownList1["\'][^>]*>(.*?)<\/select>/si';
+    if (!preg_match($pattern, $response, $selectMatch)) {
+        throw new Exception("İl listesi bulunamadı! Lütfen debug_response.html dosyasını kontrol edin.");
+    }
     
-    // Test modunu kaldır, tüm illeri al
+    // İlleri parse et
+    preg_match_all('/<option\s+value="([^"]+)"[^>]*>(.*?)<\/option>/s', $selectMatch[1], $options, PREG_SET_ORDER);
+    
+    // Boş ve seçili olanları filtrele
     $options = array_filter($options, function($option) {
         return !empty($option[1]) && $option[1] != "-1";
     });
     
-    // İlçe sayısını önceden hesapla
     $toplamIlceSayisi = 0;
     $tamamlananIlceSayisi = 0;
     
-    echo "İlçe sayısı hesaplanıyor...\n";
+    echo "İl sayısı: " . count($options) . "\n\n";
     
+    // Önce toplam ilçe sayısını hesapla
     foreach ($options as $option) {
         $ilKodu = trim($option[1]);
         $ilAdi = trim($option[2]);
@@ -241,24 +265,28 @@ try {
             '__EVENTTARGET' => 'ctl00$MainContent$DropDownList1',
             '__EVENTARGUMENT' => '',
             '__LASTFOCUS' => '',
-            '__VIEWSTATE' => $viewState,
-            '__VIEWSTATEGENERATOR' => $viewStateGenerator,
-            '__EVENTVALIDATION' => $eventValidation,
+            '__VIEWSTATE' => getViewState($response),
+            '__VIEWSTATEGENERATOR' => getViewStateGenerator($response),
+            '__EVENTVALIDATION' => getEventValidation($response),
             'ctl00$MainContent$DropDownList1' => $ilKodu
         ];
         
         $ilceResponse = makeRequest($baseUrl, $postData);
         
-        if (preg_match('/<select[^>]*id="MainContent_DropDownList2"[^>]*>(.*?)<\/select>/s', $ilceResponse, $ilceSelectMatch)) {
-            preg_match_all('/<option\s+value="([^"]+)"\s*>([^<]+)<\/option>/s', $ilceSelectMatch[1], $ilceOptions, PREG_SET_ORDER);
+        // İlçe listesini parse et
+        if (preg_match('/<select[^>]*name="ctl00\$MainContent\$DropDownList2"[^>]*>(.*?)<\/select>/s', $ilceResponse, $ilceSelectMatch)) {
+            preg_match_all('/<option\s+value="([^"]+)"[^>]*>(.*?)<\/option>/s', $ilceSelectMatch[1], $ilceOptions, PREG_SET_ORDER);
             foreach ($ilceOptions as $ilceOption) {
                 if (!empty($ilceOption[1]) && $ilceOption[1] != "-1") {
                     $toplamIlceSayisi++;
                 }
             }
         }
-        
-        echo "  $ilAdi ili için ilçeler hesaplandı.\n";
+        echo "  $ilAdi ili için ilçeler hesaplandı. (Toplam: $toplamIlceSayisi)\n";
+    }
+    
+    if ($toplamIlceSayisi == 0) {
+        throw new Exception("Hiç ilçe bulunamadı! Lütfen HTML yanıtını kontrol edin.");
     }
     
     echo "\nToplam $toplamIlceSayisi ilçe bulundu. Veri çekme işlemi başlıyor...\n\n";
@@ -277,19 +305,17 @@ try {
             '__EVENTTARGET' => 'ctl00$MainContent$DropDownList1',
             '__EVENTARGUMENT' => '',
             '__LASTFOCUS' => '',
-            '__VIEWSTATE' => $viewState,
-            '__VIEWSTATEGENERATOR' => $viewStateGenerator,
-            '__EVENTVALIDATION' => $eventValidation,
+            '__VIEWSTATE' => getViewState($response),
+            '__VIEWSTATEGENERATOR' => getViewStateGenerator($response),
+            '__EVENTVALIDATION' => getEventValidation($response),
             'ctl00$MainContent$DropDownList1' => $ilKodu
         ];
         
         $ilceResponse = makeRequest($baseUrl, $postData);
-        $viewState = getViewState($ilceResponse);
-        $viewStateGenerator = getViewStateGenerator($ilceResponse);
-        $eventValidation = getEventValidation($ilceResponse);
         
-        if (preg_match('/<select[^>]*id="MainContent_DropDownList2"[^>]*>(.*?)<\/select>/s', $ilceResponse, $ilceSelectMatch)) {
-            preg_match_all('/<option\s+value="([^"]+)"\s*>([^<]+)<\/option>/s', $ilceSelectMatch[1], $ilceOptions, PREG_SET_ORDER);
+        // İlçe listesini parse et
+        if (preg_match('/<select[^>]*name="ctl00\$MainContent\$DropDownList2"[^>]*>(.*?)<\/select>/s', $ilceResponse, $ilceSelectMatch)) {
+            preg_match_all('/<option\s+value="([^"]+)"[^>]*>(.*?)<\/option>/s', $ilceSelectMatch[1], $ilceOptions, PREG_SET_ORDER);
             
             foreach ($ilceOptions as $ilceOption) {
                 $ilceKodu = trim($ilceOption[1]);
@@ -308,44 +334,29 @@ try {
                         '__EVENTTARGET' => 'ctl00$MainContent$DropDownList2',
                         '__EVENTARGUMENT' => '',
                         '__LASTFOCUS' => '',
-                        '__VIEWSTATE' => $viewState,
-                        '__VIEWSTATEGENERATOR' => $viewStateGenerator,
-                        '__EVENTVALIDATION' => $eventValidation,
+                        '__VIEWSTATE' => getViewState($ilceResponse),
+                        '__VIEWSTATEGENERATOR' => getViewStateGenerator($ilceResponse),
+                        '__EVENTVALIDATION' => getEventValidation($ilceResponse),
                         'ctl00$MainContent$DropDownList1' => $ilKodu,
                         'ctl00$MainContent$DropDownList2' => $ilceKodu
                     ];
                     
                     $mahalleResponse = makeRequest($baseUrl, $postData);
-                    $viewState = getViewState($mahalleResponse);
-                    $viewStateGenerator = getViewStateGenerator($mahalleResponse);
-                    $eventValidation = getEventValidation($mahalleResponse);
                     
-                    if (preg_match('/<select[^>]*id="MainContent_DropDownList3"[^>]*>(.*?)<\/select>/s', $mahalleResponse, $mahalleSelectMatch)) {
-                        preg_match_all('/<option\s+value="([^"]+)"\s*>([^<]+)<\/option>/s', $mahalleSelectMatch[1], $mahalleOptions, PREG_SET_ORDER);
+                    // Mahalle listesini parse et
+                    if (preg_match('/<select[^>]*name="ctl00\$MainContent\$DropDownList3"[^>]*>(.*?)<\/select>/s', $mahalleResponse, $mahalleSelectMatch)) {
+                        preg_match_all('/<option\s+value="([^"]+)"[^>]*>(.*?)<\/option>/s', $mahalleSelectMatch[1], $mahalleOptions, PREG_SET_ORDER);
                         
                         foreach ($mahalleOptions as $mahalleOption) {
                             $mahalleKodu = trim($mahalleOption[1]);
-                            $mahalleAdi = trim($mahalleOption[2]);
+                            $mahalleBilgi = trim($mahalleOption[2]);
                             
                             if (!empty($mahalleKodu) && $mahalleKodu != "-1") {
-                                // Posta kodunu al
-                                $postData = [
-                                    '__EVENTTARGET' => '',
-                                    '__EVENTARGUMENT' => '',
-                                    '__LASTFOCUS' => '',
-                                    '__VIEWSTATE' => $viewState,
-                                    '__VIEWSTATEGENERATOR' => $viewStateGenerator,
-                                    '__EVENTVALIDATION' => $eventValidation,
-                                    'ctl00$MainContent$DropDownList1' => $ilKodu,
-                                    'ctl00$MainContent$DropDownList2' => $ilceKodu,
-                                    'ctl00$MainContent$DropDownList3' => $mahalleKodu,
-                                    'ctl00$MainContent$Button1' => 'Sorgula'
-                                ];
-                                
-                                $postaKoduResponse = makeRequest($baseUrl, $postData);
-                                
-                                if (preg_match('/<span[^>]*id="MainContent_Label1"[^>]*>(.*?)<\/span>/s', $postaKoduResponse, $postaKoduMatch)) {
-                                    $postaKodu = trim($postaKoduMatch[1]);
+                                // Mahalle adı ve posta kodunu ayır (Örnek: "MAHALLE ADI / 34000")
+                                if (preg_match('/^(.*?)\s*\/\s*(\d+)$/', $mahalleBilgi, $matches)) {
+                                    $mahalleAdi = trim($matches[1]);
+                                    $postaKodu = trim($matches[2]);
+                                    
                                     echo "    🏠 <span class='mahalle'>$mahalleAdi</span> mahallesi: <span class='posta-kodu'>$postaKodu</span>\n";
                                     
                                     $ilData['ilceler'][$ilceKodu]['mahalleler'][$mahalleKodu] = [
@@ -361,13 +372,15 @@ try {
                     }
                     
                     $tamamlananIlceSayisi++;
-                    $yuzde = round(($tamamlananIlceSayisi / $toplamIlceSayisi) * 100, 1);
-                    echo "<script>
-                        document.getElementById('progress').style.width = '$yuzde%';
-                        document.getElementById('progress').innerText = '$yuzde%';
-                        document.getElementById('status').innerText = '$ilAdi - $ilceAdi ilçesi tamamlandı ($tamamlananIlceSayisi/$toplamIlceSayisi)';
-                    </script>\n";
-                    flush();
+                    if ($toplamIlceSayisi > 0) { // Sıfıra bölme hatasını önle
+                        $yuzde = round(($tamamlananIlceSayisi / $toplamIlceSayisi) * 100, 1);
+                        echo "<script>
+                            document.getElementById('progress').style.width = '$yuzde%';
+                            document.getElementById('progress').innerText = '$yuzde%';
+                            document.getElementById('status').innerText = '$ilAdi - $ilceAdi ilçesi tamamlandı ($tamamlananIlceSayisi/$toplamIlceSayisi)';
+                        </script>\n";
+                        flush();
+                    }
                     
                     usleep(25000); // 0.025 saniye bekle
                     clearMemory();
@@ -376,16 +389,13 @@ try {
         }
         
         // İl verilerini kaydet
-        saveIlData($ilKodu, $ilData);
+        saveIlData($pdo, $ilKodu, $ilData);
         
         $ilSure = round(microtime(true) - $ilBaslangic, 2);
         echo "\n📊 $ilAdi ili tamamlandı (Süre: $ilSure saniye)\n\n";
         
         clearMemory();
     }
-    
-    $tumVeriler = mergeIlData();
-    file_put_contents('ptt_veriler.json', json_encode($tumVeriler, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     
     $toplamSure = round(microtime(true) - $startTime, 2);
     echo "<span class='ozet'>✅ İşlem tamamlandı! (Toplam süre: $toplamSure saniye)</span>\n\n";
