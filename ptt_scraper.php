@@ -400,14 +400,27 @@ try {
     $toplamSure = round(microtime(true) - $startTime, 2);
     echo "<span class='ozet'>✅ İşlem tamamlandı! (Toplam süre: $toplamSure saniye)</span>\n\n";
     
+    // Veri aktarımı için yönlendirme butonu ekle
+    echo "<div style='margin-top: 20px; padding: 10px; background: #fff; border-radius: 5px;'>";
+    echo "<h3>Veriler başarıyla çekildi!</h3>";
+    echo "<p>Şimdi bu verileri veritabanına aktarabilirsiniz.</p>";
+    echo "<button onclick='window.location.href=\"export_to_sql.php\"' style='
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 14px;
+    '>Veritabanına Aktar</button>";
+    echo "</div>";
+    
     echo "<script>
-        document.getElementById('status').innerText = 'Veriler SQL\'e aktarılıyor...';
+        document.getElementById('status').innerText = 'Veriler başarıyla çekildi. Veritabanına aktarmaya hazır!';
         document.getElementById('progress').style.width = '100%';
         document.getElementById('progress').innerText = '100%';
     </script>";
     flush();
-    
-    include 'export_to_sql.php';
     
 } catch (Exception $e) {
     echo "❌ HATA: " . $e->getMessage() . "\n";

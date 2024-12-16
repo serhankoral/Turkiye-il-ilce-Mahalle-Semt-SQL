@@ -3,118 +3,161 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '1024M');
-
-try {
-    // JSON dosyasını oku
-    $jsonData = file_get_contents('ptt_veriler.json');
-    $data = json_decode($jsonData, true);
-    
-    if (!$data) {
-        throw new Exception("JSON verisi okunamadı!");
-    }
-    
-    // Veritabanı bağlantısı
-    $db = new PDO("mysql:host=localhost;charset=utf8", "root", "");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->exec("SET NAMES utf8");
-    $db->exec("SET CHARACTER SET utf8");
-    $db->exec("SET COLLATION_CONNECTION = 'utf8_turkish_ci'");
-    
-    // SQL dosyasını oku ve çalıştır
-    $sql = file_get_contents('create_tables.sql');
-    $db->exec($sql);
-    
-    // Veritabanını seç
-    $db->exec("USE ptt_db");
-    
-    // İşlem sayacı
-    $toplamKayit = 0;
-    $islemSayaci = 0;
-    
-    // Toplam kayıt sayısını hesapla
-    foreach ($data as $il) {
-        $toplamKayit++; // il
-        foreach ($il['ilceler'] as $ilce) {
-            $toplamKayit++; // ilçe
-            foreach ($ilce['mahalleler'] as $mahalle) {
-                $toplamKayit++; // mahalle
-            }
-        }
-    }
-    
-    // İlleri ekle
-    $ilStmt = $db->prepare("INSERT IGNORE INTO iller (il_id, il_adi) VALUES (:il_id, :il_adi)");
-    
-    // İlçeleri ekle
-    $ilceStmt = $db->prepare("INSERT IGNORE INTO ilceler (ilce_id, il_id, ilce_adi) VALUES (:ilce_id, :il_id, :ilce_adi)");
-    
-    // Mahalleleri ekle
-    $mahalleStmt = $db->prepare("INSERT IGNORE INTO mahalleler (mahalle_id, ilce_id, mahalle_adi, posta_kodu) VALUES (:mahalle_id, :ilce_id, :mahalle_adi, :posta_kodu)");
-    
-    foreach ($data as $ilKodu => $il) {
-        // İl ekle
-        $ilStmt->execute([
-            ':il_id' => $ilKodu,
-            ':il_adi' => $il['il_adi']
-        ]);
-        
-        $islemSayaci++;
-        $yuzde = round(($islemSayaci / $toplamKayit) * 100, 1);
-        echo "<script>
-            document.getElementById('progress').style.width = '$yuzde%';
-            document.getElementById('progress').innerText = '$yuzde%';
-            document.getElementById('status').innerText = 'SQL: {$il['il_adi']} ili işleniyor...';
-        </script>\n";
-        flush();
-        
-        foreach ($il['ilceler'] as $ilceKodu => $ilce) {
-            // İlçe ekle
-            $ilceStmt->execute([
-                ':ilce_id' => $ilceKodu,
-                ':il_id' => $ilKodu,
-                ':ilce_adi' => $ilce['ilce_adi']
-            ]);
-            
-            $islemSayaci++;
-            $yuzde = round(($islemSayaci / $toplamKayit) * 100, 1);
-            echo "<script>
-                document.getElementById('progress').style.width = '$yuzde%';
-                document.getElementById('progress').innerText = '$yuzde%';
-                document.getElementById('status').innerText = 'SQL: {$il['il_adi']} - {$ilce['ilce_adi']} ilçesi işleniyor...';
-            </script>\n";
-            flush();
-            
-            foreach ($ilce['mahalleler'] as $mahalleKodu => $mahalle) {
-                // Mahalle ekle
-                $mahalleStmt->execute([
-                    ':mahalle_id' => $mahalleKodu,
-                    ':ilce_id' => $ilceKodu,
-                    ':mahalle_adi' => $mahalle['mahalle_adi'],
-                    ':posta_kodu' => $mahalle['posta_kodu']
-                ]);
-                
-                $islemSayaci++;
-                $yuzde = round(($islemSayaci / $toplamKayit) * 100, 1);
-                echo "<script>
-                    document.getElementById('progress').style.width = '$yuzde%';
-                    document.getElementById('progress').innerText = '$yuzde%';
-                    document.getElementById('status').innerText = 'SQL: {$il['il_adi']} - {$ilce['ilce_adi']} - {$mahalle['mahalle_adi']} mahallesi işleniyor...';
-                </script>\n";
-                flush();
-            }
-        }
-    }
-    
-    echo "<script>
-        document.getElementById('status').innerText = 'SQL aktarımı tamamlandı!';
-        document.getElementById('progress').style.width = '100%';
-        document.getElementById('progress').innerText = '100%';
-    </script>\n";
-    flush();
-    
-    echo "\n✅ Veriler başarıyla SQL'e aktarıldı!\n";
-    
-} catch (Exception $e) {
-    echo "\n❌ SQL Hatası: " . $e->getMessage() . "\n";
-}
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PTT Veri Aktarımı</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f0f0; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .progress-container { margin: 20px 0; background: #eee; padding: 3px; border-radius: 3px; }
+        .progress-bar { height: 20px; background: #4CAF50; width: 0%; border-radius: 3px; transition: width .3s; }
+        .status { margin: 10px 0; padding: 10px; border-left: 4px solid #4CAF50; }
+        .error { color: red; border-left-color: red; }
+        input, button { padding: 8px; margin: 5px 0; }
+        button { background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #45a049; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>PTT Veri Aktarımı</h2>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $db = new PDO(
+                    "mysql:host={$_POST['host']};charset=utf8mb4",
+                    $_POST['username'],
+                    $_POST['password'],
+                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+                );
+                
+                // Veritabanını oluştur ve seç
+                $db->exec("CREATE DATABASE IF NOT EXISTS {$_POST['database']} CHARACTER SET utf8mb4 COLLATE utf8mb4_turkish_ci");
+                $db->exec("USE {$_POST['database']}");
+                
+                // Tabloları oluştur
+                $sql = file_get_contents('create_tables.sql');
+                $db->exec($sql);
+                
+                // JSON verilerini oku
+                $jsonData = file_get_contents('ptt_veriler.json');
+                $data = json_decode($jsonData, true);
+                
+                if (!$data) {
+                    throw new Exception("JSON verisi okunamadı!");
+                }
+                
+                echo "<div class='progress-container'><div id='progress' class='progress-bar'></div></div>";
+                echo "<div id='status' class='status'>İşlem başlıyor...</div>";
+                
+                // İlleri ekle
+                $stmt = $db->prepare("INSERT INTO iller (il_kodu, il_adi) VALUES (?, ?)");
+                $ilCount = count($data);
+                $current = 0;
+                
+                foreach ($data as $ilKodu => $il) {
+                    $stmt->execute([intval($ilKodu), $il['il_adi']]);
+                    $current++;
+                    $percent = ($current / $ilCount) * 33; // İlk %33
+                    echo "<script>
+                        document.getElementById('progress').style.width = '{$percent}%';
+                        document.getElementById('status').innerHTML = 'İl ekleniyor: {$il['il_adi']}';
+                    </script>";
+                    flush();
+                    usleep(100000); // 0.1 saniye bekle
+                }
+                
+                // İlçeleri ekle
+                $stmt = $db->prepare("INSERT INTO ilceler (il_id, ilce_kodu, ilce_adi) VALUES ((SELECT id FROM iller WHERE il_kodu = ?), ?, ?)");
+                $ilceCount = 0;
+                foreach ($data as $il) {
+                    $ilceCount += count($il['ilceler']);
+                }
+                $current = 0;
+                
+                foreach ($data as $ilKodu => $il) {
+                    foreach ($il['ilceler'] as $ilceKodu => $ilce) {
+                        $uniqueIlceKodu = sprintf("%02d_%s", intval($ilKodu), $ilceKodu);
+                        $stmt->execute([intval($ilKodu), $uniqueIlceKodu, $ilce['ilce_adi']]);
+                        $current++;
+                        $percent = 33 + ($current / $ilceCount) * 33; // %33-%66 arası
+                        echo "<script>
+                            document.getElementById('progress').style.width = '{$percent}%';
+                            document.getElementById('status').innerHTML = 'İlçe ekleniyor: {$ilce['ilce_adi']}';
+                        </script>";
+                        flush();
+                        usleep(50000); // 0.05 saniye bekle
+                    }
+                }
+                
+                // Mahalleleri ekle
+                $stmt = $db->prepare("INSERT INTO mahalleler (ilce_id, mahalle_kodu, mahalle_adi, posta_kodu) VALUES ((SELECT id FROM ilceler WHERE ilce_kodu = ?), ?, ?, ?)");
+                $mahalleCount = 0;
+                foreach ($data as $il) {
+                    foreach ($il['ilceler'] as $ilce) {
+                        $mahalleCount += count($ilce['mahalleler']);
+                    }
+                }
+                $current = 0;
+                
+                foreach ($data as $ilKodu => $il) {
+                    foreach ($il['ilceler'] as $ilceKodu => $ilce) {
+                        $uniqueIlceKodu = sprintf("%02d_%s", intval($ilKodu), $ilceKodu);
+                        foreach ($ilce['mahalleler'] as $mahalleKodu => $mahalle) {
+                            $uniqueMahalleKodu = sprintf("%02d_%s_%s", intval($ilKodu), $ilceKodu, $mahalleKodu);
+                            $stmt->execute([
+                                $uniqueIlceKodu,
+                                $uniqueMahalleKodu,
+                                $mahalle['mahalle_adi'],
+                                $mahalle['posta_kodu']
+                            ]);
+                            $current++;
+                            $percent = 66 + ($current / $mahalleCount) * 34; // %66-%100 arası
+                            if ($current % 100 == 0) { // Her 100 mahallede bir güncelle
+                                echo "<script>
+                                    document.getElementById('progress').style.width = '{$percent}%';
+                                    document.getElementById('status').innerHTML = 'Mahalle ekleniyor: {$mahalle['mahalle_adi']}';
+                                </script>";
+                                flush();
+                            }
+                            usleep(10000); // 0.01 saniye bekle
+                        }
+                    }
+                }
+                
+                echo "<script>
+                    document.getElementById('progress').style.width = '100%';
+                    document.getElementById('status').innerHTML = 'İşlem tamamlandı!';
+                </script>";
+                
+            } catch (Exception $e) {
+                echo "<div class='status error'>Hata: " . $e->getMessage() . "</div>";
+            }
+        } else {
+        ?>
+        <form method="post">
+            <div>
+                <label>Veritabanı Sunucusu:</label><br>
+                <input type="text" name="host" value="localhost" required>
+            </div>
+            <div>
+                <label>Veritabanı Adı:</label><br>
+                <input type="text" name="database" value="ptt_db" required>
+            </div>
+            <div>
+                <label>Kullanıcı Adı:</label><br>
+                <input type="text" name="username" value="root" required>
+            </div>
+            <div>
+                <label>Şifre:</label><br>
+                <input type="password" name="password">
+            </div>
+            <button type="submit">Veri Aktarımını Başlat</button>
+        </form>
+        <?php } ?>
+    </div>
+</body>
+</html>
